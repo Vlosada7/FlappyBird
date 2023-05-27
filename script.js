@@ -23,9 +23,10 @@ const spaceBetween = 100;
 let constant;
 let bX = 33;
 let bY = 200;
-const gravity = 1.4;
+const gravity = 1.8;
 let score = 0;
 let pipes = [];
+let vel = 1;
 
 pipes[0] = {
 	x: canvas.width,
@@ -60,11 +61,11 @@ function game() {
 		//Position down pipe
 		ctx.drawImage(pipeUp, pipes[i].x, pipes[i].y);
 
-		//config down pipe
+		//Config down pipe
 		ctx.drawImage(pipeDown, pipes[i].x, pipes[i].y + constant);
 
 		//Pipe movement
-		pipes[i].x = pipes[i].x - 1;
+		pipes[i].x = pipes[i].x - vel;
 
 		//Create new pipes
 		if (pipes[i].x == 100) {
@@ -75,16 +76,21 @@ function game() {
 		}
 
 		//Colision between pipes
-    if ((bX +bird.width >= pipes[i].x && bX <= pipes[i].x +pipeUp.width) && (bY <= pipes[i].y + pipeUp.height || bY + bird.height >= pipes[i].y + constant) || (bY + bird.height >= canvas.height - floor.height)) {
-      location.reload();
-    }
+		if (
+			(bX + bird.width >= pipes[i].x &&
+				bX <= pipes[i].x + pipeUp.width &&
+				(bY <= pipes[i].y + pipeUp.height ||
+					bY + bird.height >= pipes[i].y + constant)) ||
+			bY + bird.height >= canvas.height - floor.height
+		) {
+			location.reload();
+		}
 
-    //Score system
-    if (pipes[i].x == 5) {
-      score += 1;
-      scoreAudio.play();
-    }
-			
+		//Score system
+		if (pipes[i].x == 5) {
+			score += 1;
+			scoreAudio.play();
+		}
 	}
 
 	//Floor
@@ -94,10 +100,10 @@ function game() {
 	ctx.drawImage(bird, bX, bY);
 	bY += gravity;
 
-  //Score board
-  ctx.fillStyle = "#000";
-  ctx.font = "20px Verdana";
-  ctx.fillText("Score: " + score, 10, canvas.height - 20);
+	//Score board
+	ctx.fillStyle = "#000";
+	ctx.font = "20px Verdana";
+	ctx.fillText("Score: " + score, 10, canvas.height - 20);
 
 	requestAnimationFrame(game);
 }
